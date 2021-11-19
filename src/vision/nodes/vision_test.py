@@ -20,7 +20,7 @@ class Pipeline:
         self.hsv_publisher = rospy.Publisher('hsv_image', Image, queue_size=10)
 
     def callback(self, rgb_msg, camera_info):
-        #print("sdcsdcsdc")
+        # print("sdcsdcsdc")
 
         rgb_image = np.frombuffer(rgb_msg.data, dtype=np.uint8).reshape(rgb_msg.height, rgb_msg.width, -1)
         
@@ -31,9 +31,9 @@ class Pipeline:
 
         #rgb_image = CvBridge().imgmsg_to_cv2(rgb_msg, desired_encoding="rgb8")
     
-        cv2.imshow("camera_raw", hsv)
+        # cv2.imshow("camera_raw", hsv)
         self.hsv_publisher.publish(self.br.cv2_to_imgmsg(hsv))
-        cv2.waitKey(10)
+        # cv2.waitKey(10)
 
         #camera_info_K = np.array(camera_info.K).reshape([3, 3])
         #camera_info_D = np.array(camera_info.D)

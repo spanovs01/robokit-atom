@@ -8,4 +8,4 @@ Workspace for Robokit Atom robot.
  ./install.sh
  ```
 
-For future project building you can also use ```install.sh```. It ```catkin_make``` with python3 and source ```devel/setup.sh```
+For future project building you can also use ```install.sh```. It ```catkin_make``` with python3 and source ```devel/setup.sh```.
