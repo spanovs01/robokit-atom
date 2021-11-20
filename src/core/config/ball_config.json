@@ -9,13 +9,13 @@
             "filters":
             [
                 {
-                "name": "colorspace2colorspace",
+                "name": "Colorspace_transform",
                 "from" : "RGB",
                 "to"   : "HSV"
                 },
 
                 {
-                "name": "inrange",
+                "name": "Inrange",
                 "l1": "23",
                 "l2": "78",
                 "l3": "106",
@@ -25,7 +25,7 @@
                 },
 
                 {
-                "name": "filter_connected_components",
+                "name": "Filter_connected_components",
                 "area_low":  "100",
                 "area_high": "-1",
                 "hei_low":   "-1",
@@ -37,7 +37,7 @@
                 },
 
                 {
-                "name": "max_area_cc_bbox",
+                "name": "Max_area_cc_bbox",
                 }
             ]
             }
