@@ -13,3 +13,11 @@ Workspace for Robokit Atom robot.
     catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3
     source devel/setup.sh
 ```
+
+## Launching
+
+To launch test vision script:
+
+```bash
+ roslaunch vision vision_test.launch
+```
