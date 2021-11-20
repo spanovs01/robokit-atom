@@ -19,5 +19,5 @@ Workspace for Robokit Atom robot.
 To launch test vision script:
 
 ```bash
- roslaunch vision vision_test.launch
+ roslaunch core vision_test.launch
 ```

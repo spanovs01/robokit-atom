@@ -1,0 +1,46 @@
+{   
+    "competition" : "basketball",
+    "object"      : "ball",
+    
+    "processors":
+        [
+            {
+            "name": "ball detector",
+            "filters":
+            [
+                {
+                "name": "colorspace2colorspace",
+                "from" : "RGB",
+                "to"   : "HSV"
+                },
+
+                {
+                "name": "inrange",
+                "l1": "23",
+                "l2": "78",
+                "l3": "106",
+                "h1": "52",
+                "h2": "174",
+                "h3": "239"
+                },
+
+                {
+                "name": "filter_connected_components",
+                "area_low":  "100",
+                "area_high": "-1",
+                "hei_low":   "-1",
+                "hei_high":  "-1",
+                "wid_low":   "-1",
+                "wid_high":  "-1",
+                "den_low":   "-1",
+                "den_high":  "-1"
+                },
+
+                {
+                "name": "max_area_cc_bbox",
+                }
+            ]
+            }
+         ]
+}
+

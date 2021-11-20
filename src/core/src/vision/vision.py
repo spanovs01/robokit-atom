@@ -1,81 +1,24 @@
-"""[summary]
-
-Returns:
-    [type]: [description]
-"""
-"""
-    Type: sensor_msgs/msg/Image
-
-Publisher count: 1
-
-Node name: gazebo_plugins
-Node namespace: /rs_camera
-Topic type: sensor_msgs/msg/Image
-Endpoint type: PUBLISHER
-GID: 01.0f.91.77.29.82.00.00.01.00.00.00.00.00.29.03.00.00.00.00.00.00.00.00
-QoS profile:
-  Reliability: RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT
-  Durability: RMW_QOS_POLICY_DURABILITY_VOLATILE
-  Lifespan: 2147483651294967295 nanoseconds
-  Deadline: 2147483651294967295 nanoseconds
-  Liveliness: RMW_QOS_POLICY_LIVELINESS_AUTOMATIC
-  Liveliness lease duration: 2147483651294967295 nanoseconds
-
-Subscription count: 0
-"""
 import numpy as np
 import cv2
 from module import Module
 
-#import rclpy
-#from rclpy.node import Node
-
-#from std_msgs.msg import String
-#from sensor_msgs.msg import Image
-
-#from cv_bridge import CvBridge
-#from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSDurabilityPolicy
-
-class Colorspace_transform(Module):#, Node):
-    transforms = {}
+class Colorspace_transform(Module):
+    self.transforms = {"RGB2BGR": cv2.COLOR_RGB2BGR,
+                       "RGB2GRAY": cv2.COLOR_RGB2GRAY,
+                       "GRAY2RGB": cv2.COLOR_GRAY2RGB,
+                       "RGB2HSV": cv2.COLOR_RGB2HSV,
+                       "HSV2RGB": cv2.COLOR_HSV2RGB,
+                       "RGB2YCrCb": cv2.COLOR_RGB2YCrCb,
+                       "YCrCb2RGB": cv2.COLOR_YCrCb2RGB,
+                      }
 
     def __init__(self, params):
-        Module.__init__(self, params, "colorspace_transform")
-        #Node.__init__(self, "colorspace_filter_subscriber")
-
-        #print(params["topic"])
-
-        #qos = QoSProfile(depth = 10,
-        #                durability = QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_VOLATILE,
-        #                reliability = QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT)
-        #self.subscription = self.create_subscription(
-            #String,
-        #    Image,
-            # "sos",
-            #'/rs_camera/rs_d435/image_raw',
-        #    params["topic"],
-        #    self.listener,
-        #    qos)
-
-        #self.subscription
-
-        #self.bridge = CvBridge()
+        super.__init__(self, params, "Colorspace_transform")
 
         self.result = np.zeros((3,3,3), np.uint8)
 
         self.source_colorspace = params["from"]
         self.target_colorspace = params["to"]
-
-        self.transforms.update({"RGB2BGR": cv2.COLOR_RGB2BGR})
-
-        self.transforms.update({"RGB2GRAY": cv2.COLOR_RGB2GRAY})
-        self.transforms.update({"GRAY2RGB": cv2.COLOR_GRAY2RGB})
-
-        self.transforms.update({"RGB2HSV": cv2.COLOR_RGB2HSV})
-        self.transforms.update({"HSV2RGB": cv2.COLOR_HSV2RGB})
-
-        self.transforms.update({"RGB2YCrCb": cv2.COLOR_RGB2YCrCb})
-        self.transforms.update({"YCrCb2RGB": cv2.COLOR_YCrCb2RGB})
 
     def apply(self, input):
         inp_listed = list(input.items())
@@ -88,8 +31,7 @@ class Colorspace_transform(Module):#, Node):
 
         else:
             self.result = np.ones((20, 20, 3), np.uint8) * 12
-            #self.result = np.indices((20, 20, 3))[0].reshape(-1, 20, 20).T * 11
-
+            
         return self.result
 
     def work(self, inp):
@@ -102,28 +44,14 @@ class Colorspace_transform(Module):#, Node):
 	
         return self.result
 
-    def listener(self, msg):
-        #print ("message received")
-        input__ = self.bridge.imgmsg_to_cv2(msg, desired_encoding='passthrough')
-
-        self.work (input__)
-
-        cv2.imshow("colorspace transform", self.result)
-
-        # return self.result
-
-    def draw(self, img):
-        return self.result
-
 
 class Inrange(Module):
     def __init__(self, params):
-        super().__init__(params, "inrange")
+        super().__init__(params, "Inrange")
 
         self.set_ths(params["low_th"], params["high_th"])
 
     def apply(self, input):
-        #print ("inrange input", input)
         _, input_ = list(input.items())[0]
 
         self.result = cv2.inRange(input_, tuple(self.low_th), tuple(self.high_th))
@@ -137,10 +65,59 @@ class Inrange(Module):
         self.low_th = list(low_th_)
         self.high_th = list(high_th_)
 
+class Filter_connected_components (Filter):
+    def __init__(self, area_low_=-1, area_high_=-1, hei_low_=-1, hei_high_=-1,
+                 wid_low_=-1, wid_high_=-1, den_low_=-1, den_high_=-1):
+        Filter.__init__(self, "Filter_connected_components")
+
+        self.area_low = area_low_
+        self.area_high = area_high_
+        self.hei_low = hei_low_
+        self.hei_high = hei_high_
+        self.wid_low = wid_low_
+        self.wid_high = wid_high_
+        self.den_low = den_low_
+        self.den_high = den_high_
+
+    def apply(self, img):  # , area_low = -1, area_high = -1, hei_low = -1, hei_high = -1,
+        # wid_low = -1, wid_high = -1, den_low = -1, den_high = -1):
+        return image_processing.filter_connected_components(img, self.area_low,
+                                                            self.area_high, self.hei_low, self.hei_high, self.wid_low,
+                                                            self.wid_high, self.den_low, self.den_high)
+
+    def apply(self, img):
+        result = np.array(mask)
+        output = cv2.connectedComponentsWithStats(mask, 8, cv2.CV_32S)
+
+        labels_count = output[0]
+        labels = output[1]
+        stats = output[2]
+        sz = stats.shape[0]
+
+        def _in_range(value, low, high):
+            if ((value < low  and low  != -1) or
+                (value > high and high != -1)):
+                return False
+
+            return True
+
+        for label_num in range(0, sz):
+            area    = stats[label_num, cv2.CC_STAT_AREA]
+            height  = stats[label_num, cv2.CC_STAT_HEIGHT]
+            width   = stats[label_num, cv2.CC_STAT_WIDTH]
+            density = float(area) / (height * width)
+        
+            if (_in_range(area,    self.area_low, self.area_high) == False or
+                _in_range(height,  self.hei_low,  self.hei_high)  == False or
+                _in_range(width,   self.wid_low,  self.wid_high)  == False or
+                _in_range(density, self.den_low,  self.den_high)  == False):
+            result[labels == label_num] = 0
+
+    return result
 
 class Max_area_cc_bbox(Module):
     def __init__(self, params):
-        super().__init__(params, "max_area_cc_bbox")
+        super().__init__(params, "Max_area_cc_bbox")
 
         self.bbox_num = params["bbox_num"]
 
