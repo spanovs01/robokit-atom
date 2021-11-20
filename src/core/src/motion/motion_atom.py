@@ -2,12 +2,13 @@
 
 import sys
 import math, time
+import serial
+from serial import Serial as UART
+
 from .compute_Alpha_v3 import Alpha
+from .kondo_controller import Rcb4BaseLib
 
-if sys.version == '3.4.0': comp = "OpenMV"
-else: comp = "ANY" 
-
-class MotionC:
+class Motion:
     def __init__(self):
         self.ACTIVESERVOS = [(10,2),(9,2),(8,2),(7,2),(6,2),(5,2),(4,2),
                 (3,2),(2,2),(1,2),(0,2),(10,1),(9,1),(8,1),
@@ -84,14 +85,8 @@ class MotionC:
             'hand_right_3','hand_right_2','hand_right_1','Tors1','Leg_left_10','Leg_left_9','Leg_left_8',
             'Leg_left_7','Leg_left_6','Leg_left_5','hand_left_4','hand_left_3','hand_left_2','hand_left_1','head0','head12']
         
-        if comp == "OpenMV":
-            import pyb
-            from pyb import UART
-            self.pyb = pyb
         
-
-        from .kondo_controller import Rcb4BaseLib
-        uart = UART(1, 1250000, timeout=1000, parity=0)
+        uart = UART("/dev/tty0", 1250000, timeout = 1000, parity = serial.PARITY_ODD)
         self.kondo = Rcb4BaseLib()
         self.kondo.open(uart)
         #self.kondo.motionPlay(25)

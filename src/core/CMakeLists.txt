@@ -57,6 +57,8 @@ catkin_python_setup()
 add_service_files(
   FILES
   ModelService.srv
+  MotionService.srv
+  WalkService.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -162,6 +164,8 @@ catkin_install_python(PROGRAMS
   nodes/model_service.py
   nodes/vision_test.py
   nodes/hsv_reader.py
+  nodes/test_walk_client.py
+  nodes/walk_motion_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
