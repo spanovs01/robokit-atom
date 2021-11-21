@@ -2,69 +2,69 @@
 
 import numpy as np
 import cv2
+import json
 
-from sensor_msgs.msg import CameraInfo, Image, Point
+from sensor_msgs.msg import CameraInfo, Image
+from geometry_msgs.msg import Point
+
 import message_filters
 import rospy
 import importlib
 
-from module import Module
+from common.module import Module
 #from pipeline import Pipeline
 import vision
 
 class VisionPipeline(Module):
-    def __init__(self, params):
-        super.__init__(self, params)
-
-        #publisher
-        rospy.init_node(params["node_name"])
-        self.image_publisher = rospy.Publisher(params["topic_name"], Point)
-
-        #subscriber
-        self.image_sub = message_filters.Subscriber('/usb_cam/image_raw', Image)
-        self.info_sub = message_filters.Subscriber('/usb_cam/camera_info', CameraInfo)
-
-        ts = message_filters.ApproximateTimeSynchronizer([self.image_sub, self.info_sub], 10, 0.2)
-        ts.registerCallback(self.apply)
-
-        #load vision filters
-        self.load_configuration(params["vision_config"])
-
+    def __init__(self, params, image_publisher):
+        super().__init__(params)
+        self.show = True
         self.filters = []
+        self.res_pub = image_publisher
+        self.load_configuration(params["processors"])
 
     def apply(self, inp):
         #read, process, write
-
-        results = []
+        print("Processing...")
+        rgb_image = np.frombuffer(inp.data, dtype=np.uint8).reshape(inp.height, inp.width, -1)
+        results = [rgb_image]
 
         for f in self.filters:
             results.append(f.apply(results[-1]))
+
+        bb, success = results[-1]
+        if success:
+            self.res_pub.publish(self.get_point_from_bb(bb))
+        # return results[-1]
+
+    @staticmethod
+    def get_point_from_bb(bb):
+        (left, _), (right, bottom) = bb
+        return Point(left + right, bottom, 0) 
+
+    def load_configuration(self, vision_module_config):
+        self.vision_module_name = vision_module_config["name"]
+
+        vision_library = importlib.import_module("vision.filters")
         
-        return results[-1]
-
-    def load_configuration(self, config_path):
-        with open(config_path) as config_file:
-            config = json.load(config_file)
-
-        vision_module_config = config["processors"][0]
-	self.vision_module_name = vision_module_config["name"]
-
-        vision_library = importlib.import_module("vision")
-        
-        for f in vision_module_config["filters"]:
+        for filter_params in vision_module_config["filters"]:
             #Creating instance of module
-	    module_instance = getattr(vision_library, f["name"])
-	    module = module_instance(params)
-
+            module_name = filter_params["name"]
+            module_instance = getattr(vision_library, module_name)
+            module = module_instance(filter_params)
             self.filters.append(module)
-
-	    print("Module \033[92m{}\033[0m added to container".format(module_name))
+            print("Module \033[92m{}\033[0m added to container".format(module_name))
 
 if __name__ == '__main__':
-    rospy.init_node('vision_node', anonymous=True)
-    vision_config = rospy.get_param("vision_config")
+    vision_config_path = rospy.get_param("vision_config")
+    with open(vision_config_path) as f:
+        vision_config = json.load(f)
+    rospy.init_node(vision_config["node_name"])
+    # print("VISION_CONFIG: ", vision_config)
+    image_publisher = rospy.Publisher(vision_config["pub_topic_name"], Point, queue_size=10)
+    pipeline = VisionPipeline(vision_config, image_publisher)
 
-    pipeline = VisionPipeline(vision_config)
+    image_sub = rospy.Subscriber('/usb_cam/image_raw', Image, pipeline.apply)
 
     rospy.spin()
 
