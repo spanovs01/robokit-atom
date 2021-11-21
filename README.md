@@ -16,8 +16,17 @@ Workspace for Robokit Atom robot.
 
 ## Launching
 
-To launch test vision script:
+To launch vision node:
 
 ```bash
- roslaunch core vision_test.launch
+ roslaunch core vision.launch
 ```
+
+To launch motion node:
+
+```bash
+  rosrun core walk_motion_server.py
+```
+
+
+
