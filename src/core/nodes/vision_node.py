@@ -56,7 +56,6 @@ class VisionPipeline(Module):
             print("Module \033[92m{}\033[0m added to container".format(module_name))
 
 if __name__ == '__main__':
-    print(rospy.get_param_names())
     vision_config_path = rospy.get_param("/vision_config")
     with open(vision_config_path) as f:
         vision_config = json.load(f)
