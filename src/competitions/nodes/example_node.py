@@ -10,7 +10,7 @@ from core.srv import ModelService
 class ExampleFSM:
     def __init__(self):
         self.ball = (None, None)
-        self.last_seen_ball = np.inf
+        self.last_seen_ball = 0
         self.camera_pan = 0
         self.camera_tilt = 0
 
@@ -35,7 +35,7 @@ class ExampleFSM:
     
     def tick(self):
         # rospy.spinOnce()
-        if (self.last_seen_ball <= 1.0):
+        if (time.time() - self.last_seen_ball <= 1.0):
             rospy.loginfo("Go to the ball")
         else: 
             rospy.loginfo("Searching for the ball")
