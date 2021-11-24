@@ -25,7 +25,7 @@ class VisionPipeline(Module):
 
     def apply(self, inp):
         #read, process, write
-        print("Processing...")
+        # print("Processing...")
         rgb_image = np.frombuffer(inp.data, dtype=np.uint8).reshape(inp.height, inp.width, -1)
         results = [rgb_image]
 
@@ -53,7 +53,7 @@ class VisionPipeline(Module):
             module_instance = getattr(vision_library, module_name)
             module = module_instance(filter_params)
             self.filters.append(module)
-            print("Module \033[92m{}\033[0m added to container".format(module_name))
+            rospy.loginfo("Module \033[92m{}\033[0m added to container".format(module_name))
 
 if __name__ == '__main__':
     vision_config_path = rospy.get_param("/vision_config")

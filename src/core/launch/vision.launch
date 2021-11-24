@@ -7,9 +7,9 @@
         <param name="vision_config" type="string" value="$(find core)/config/ball_config.json" />
     </node>
 
-    <node pkg="core" name="basket" type="vision_node.py" output="screen"> 
+    <!-- <node pkg="core" name="basket" type="vision_node.py" output="screen"> 
         <param name="vision_config" type="string" value="$(find core)/config/ball_config.json" />
-    </node>
+    </node> -->
 </launch>
 
  
