@@ -86,9 +86,11 @@ class Motion:
             'Leg_left_7','Leg_left_6','Leg_left_5','hand_left_4','hand_left_3','hand_left_2','hand_left_1','head0','head12']
         
         
-        uart = UART("/dev/tty0", 1250000, timeout = 1000, parity = serial.PARITY_ODD)
+        #uart = UART("/dev/tty0", 1250000, timeout = 1000, parity = serial.PARITY_ODD)
+
         self.kondo = Rcb4BaseLib()
-        self.kondo.open(uart)
+        self.kondo.open('/dev/ttyS5',1250000, 1.3)
+        #self.kondo.open(uart)
         #self.kondo.motionPlay(25)
         
 
