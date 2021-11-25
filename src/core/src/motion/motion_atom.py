@@ -89,7 +89,10 @@ class Motion:
         #uart = UART("/dev/tty0", 1250000, timeout = 1000, parity = serial.PARITY_ODD)
 
         self.kondo = Rcb4BaseLib()
-        self.kondo.open('/dev/ttyS5',1250000, 1.3)
+
+        while not self.kondo.open('/dev/ttyS5',1250000, 1.3):
+            print("Waiting for kondo controller conection...")
+            time.sleep(1)
         #self.kondo.open(uart)
         #self.kondo.motionPlay(25)
         
