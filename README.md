@@ -25,7 +25,7 @@ To launch vision node:
 To launch motion node:
 
 ```bash
-  rosrun core walk_motion_server.py
+  rosrun core walk_motion_node.py
 ```
 
 
