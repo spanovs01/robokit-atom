@@ -16,10 +16,16 @@ Workspace for Robokit Atom robot.
 
 ## Launching
 
+To launch camera, model and motion nodes: 
+
+```bash
+ roslaunch core core.launch
+```
+
 To launch vision node:
 
 ```bash
- roslaunch core vision.launch
+ roslaunch core vision_test.launch
 ```
 
 To launch motion node:
