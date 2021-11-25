@@ -53,7 +53,7 @@ class VisionPipeline(Module):
             module_instance = getattr(vision_library, module_name)
             module = module_instance(filter_params)
             self.filters.append(module)
-            rospy.loginfo("Module \033[92m{}\033[0m added to container".format(module_name))
+            rospy.loginfo("Pipeline \033[1m{}\033[0m: Filter \033[92m{}\033[0m added.".format(rospy.get_name(), module_name))
 
 if __name__ == '__main__':
     vision_config_path = rospy.get_param("/vision_config")

@@ -15,7 +15,7 @@ class MotionServer:
         self.motion_config = None
 
         self.load_config()
-        print(self.motion_config)
+        rospy.logdebug(self.motion_config)
 
     def load_config(self):
         rp = RosPack()
@@ -54,7 +54,7 @@ class MotionServer:
         s_num = rospy.Service('walk_service', WalkService, self.handle_walk)
         s_str = rospy.Service(
             'motion_service', MotionService, self.handle_motion)
-        print('ready for motion')
+        rospy.loginfo(f"Launched \033[92mwalk_service\033[0m and \033[92mmotion_service\033[0m")
         rospy.spin()
 
     def motion_cycle(self, cycle_num, step_length, side_length, angle):
