@@ -2,6 +2,7 @@
 
 import rospy
 from core.srv import MotionService, WalkService
+import time
 
 def walk_client(n, step, side, ang):
     rospy.wait_for_service('walk_service')
@@ -24,7 +25,11 @@ if __name__ == "__main__":
     stepLength = 64
     sideLength = 0
     rotation = 0
-    walk_client(num, stepLength, 0, 0.0)
+
+    walk_client(True, stepLength, 0, 0.0)
+    time.sleep(5)
+    walk_client(False, stepLength, 0, 0.0)
+
     motion_client('test_head')
 
         
