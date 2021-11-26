@@ -56,11 +56,10 @@ class VisionPipeline(Module):
             rospy.loginfo("Pipeline \033[1m{}\033[0m: Filter \033[92m{}\033[0m added.".format(rospy.get_name(), module_name))
 
 if __name__ == '__main__':
-    vision_config_path = rospy.get_param("/vision_config")
+    rospy.init_node("vision")
+    vision_config_path = rospy.get_param("~vision_config")
     with open(vision_config_path) as f:
         vision_config = json.load(f)
-    rospy.init_node(vision_config["node_name"])
-    # print("VISION_CONFIG: ", vision_config)
     image_publisher = rospy.Publisher(vision_config["pub_topic_name"], Point, queue_size=10)
     pipeline = VisionPipeline(vision_config, image_publisher)
 
