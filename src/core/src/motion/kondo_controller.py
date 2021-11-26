@@ -207,7 +207,7 @@ class Rcb4BaseLib:
 
             self.__isSynchronize = True
 
-            print('sendData-->',sendbuf)
+            # print('sendData-->',sendbuf)
 
             self.com.flushInput()
             self.com.write(sendbuf)

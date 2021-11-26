@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import rospy
 from core.srv import MotionService, WalkService
 
