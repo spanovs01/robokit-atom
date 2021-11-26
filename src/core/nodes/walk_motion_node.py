@@ -59,10 +59,17 @@ class MotionServer:
             
 
     def motion_cycle(self):
+
+        if (self.walk_cycles == 0):
+            self.motion.walk_Initial_Pose()
+
         if self.last_step:
             self.walk_cycles = 0
             self.motion.walk_Cycle(
                 self.step_length, self.side_length, self.angle, 99, 100)
+            self.motion.walk_Cycle(
+                self.step_length, self.side_length, self.angle, 100, 100)
+            self.motion.walk_Final_Pose()
         elif self.walk_enabled:
             step_length = self.step_length
             if self.walk_cycles == 0:
@@ -72,6 +79,8 @@ class MotionServer:
             self.motion.walk_Cycle(
                 step_length, self.side_length, self.angle, 4, 100)
             self.walk_cycles += 1
+        
+
 
 
     # def motion_cycle(self, step_length, side_length, angle, last = False):
