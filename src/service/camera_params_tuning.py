@@ -38,14 +38,14 @@ while (True):
 
     mask_3_channels = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
 
-    result = np.concatenate((frame, hsv, mask_3_channels), axis = 1)
+    result = np.concatenate((frame, mask_3_channels), axis = 1)
     cv2.imshow ("Colorbars", result)
 
     #os.system ('clear')
 
     print (low_th, high_th)
 
-    key = cv2.waitKey(150) & 0xFF
+    key = cv2.waitKey(50) & 0xFF
 
     if (key == ord('q')):
         break
