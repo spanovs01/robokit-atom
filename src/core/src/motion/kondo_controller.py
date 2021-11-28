@@ -226,7 +226,7 @@ class Rcb4BaseLib:
              #   self.com.flushInput()
               #  rxbuf = []
             self.__isSynchronize = False
-            print('readData-->',rxbuf)
+            # print('readData-->',rxbuf)
             return rxbuf
         else:
             rxbuf = []
