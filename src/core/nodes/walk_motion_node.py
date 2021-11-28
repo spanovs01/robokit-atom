@@ -3,10 +3,11 @@
 import os
 import rospy
 import json
+import time
 from rospkg import RosPack
 
 from motion.motion_atom import Motion
-from core.srv import MotionService, WalkService
+from core.srv import MotionService, WalkService, ServoService
 
 
 class MotionServer:
@@ -21,18 +22,24 @@ class MotionServer:
         self.side_length = 0
         self.angle = 0
 
-
         self.motion_config = None
+        self.servo_config = None
 
         self.load_config()
+
         rospy.logdebug(self.motion_config)
 
     def load_config(self):
         rp = RosPack()
         core_path = rp.get_path("core")
+
         config_path = core_path + "/config/motion_config_test.json"
         with open(config_path) as f:
             self.motion_config = json.load(f)
+
+        config_path = core_path + "/config/servo_config.json"
+        with open(config_path) as f:
+            self.servo_config = json.load(f)
 
     def handle_walk(self, req):
         walk_enabled = req.walk_enabled
@@ -52,12 +59,33 @@ class MotionServer:
         self.motion.kondo.motionPlay(self.motion_config[motion_name])
         return True
 
+    def handle_servo(self, req):
+        names = req.names
+        positions = req.positions
+        start1 = time.perf_counter()
+        servoDatas = []
+
+        for name, position in zip(names, positions):
+            pos = int(position * 1698 + 7500)
+            servoDatas.append(self.motion.kondo.ServoData(self.servo_config[name][0],
+                                                          self.servo_config[name][1],
+                                                          pos))
+        servoDatas = self.motion.reOrderServoData(servoDatas)
+            
+        a = self.motion.kondo.setServoPos(servoDatas, self.motion.frames_per_cycle)
+        
+        time1 = time.perf_counter() - start1
+        time.sleep(time1)
+        return a
+
+
     def motion_server(self):
         rospy.init_node('motion_server')
         s_num = rospy.Service('walk_service', WalkService, self.handle_walk)
         s_str = rospy.Service(
             'motion_service', MotionService, self.handle_motion)
-        rospy.loginfo(f"Launched \033[92mwalk_service\033[0m and \033[92mmotion_service\033[0m")
+        s_serv = rospy.Service('servo_srvice', ServoService, self.handle_servo)
+        rospy.loginfo(f"Launched \033[92mwalk_service\033[0m, \033[92mservo_service\033[0m and \033[92mmotion_service\033[0m")
         
         while True:
             self.motion_cycle()
