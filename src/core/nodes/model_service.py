@@ -2,7 +2,7 @@
 
 import rospy
 # from robot_model import RobotModel
-from model.srv import ModelService, ModelServiceResponse 
+from core.srv import ModelService, ModelServiceResponse 
 import model
 from model.robot_model import RobotModel
 # import vision
