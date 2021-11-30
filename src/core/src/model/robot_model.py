@@ -3,7 +3,7 @@ from .camera_model import CameraModel
 
 class RobotModel:
     def __init__(self):
-        self.robot_height = 0.24
+        self.robot_height = 0.45
         self.camera_pan = 0
         self.camera_tilt = 0
         self.camera_model = CameraModel()
