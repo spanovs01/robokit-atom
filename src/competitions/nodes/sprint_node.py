@@ -14,13 +14,13 @@ start = 340
 end = 1
 critical_degree = 10 / math.pi
 lateral_def = 0.2
-coeff_pan_forward = 0.5
-coeff_y_forward = 0.5
-coeff_pan_backward = 0.5
-coeff_y_backward = 0.5
+coeff_pan_forward = 0.1
+coeff_y_forward = 0.1
+coeff_pan_backward = 0.1
+coeff_y_backward = 0.1
 
 
-class Sprint:
+class Srospy.loginfo:
     def __init__(self) -> None:
         self.camera_pan = 0
         self.camera_tilt = 0
@@ -51,66 +51,68 @@ class Sprint:
     def walking_forward_tick(self):
         # a(n, step, side, ang)
         # except rospy.ServiceException as e:
-        # print("Service call failed:", e)
+        # rospy.loginfo("Service call failed:", e)
+        rospy.loginfo("walking_forward_tick")
+
 
         if (self.my_position == None):
-            print("starting")
+            rospy.loginfo("starting")
             return 1
         if (self.my_position.translation.z <= end):
-            print("Stop and go back")
+            rospy.loginfo("Stop and go back")
             return 0
         elif(self.my_pan > critical_degree):  # 10 degree
             self.walk_service (1, self.forward_step, self.my_pan, self.my_position.translation.y)
-            print("go right")
+            rospy.loginfo("go right")
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
         elif(self.my_pan < - critical_degree):
             self.walk_service (1, self.forward_step, self.my_pan, self.my_position.translation.y)
-            print("go left")
+            rospy.loginfo("go left")
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
         else:
             self.walk_service(1, self.forward_step, self.my_pan * coeff_pan_forward,
                         self.my_position.translation.y * coeff_y_forward)
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
-            print("go forward")
+            rospy.loginfo("go forward")
         return 1
 
     def walking_backward_tick(self):
         # a(n, step, side, ang)
         # except rospy.ServiceException as e:
-        # print("Service call failed:", e)
+        # rospy.loginfo("Service call failed:", e)
 
         if (self.my_position == None):
-            print("starting")
+            rospy.loginfo("starting")
             return 1
         if (self.my_position.translation.z >= start):
-            print("Stop and relax")
+            rospy.loginfo("Stop and relax")
             exit()  # fine exit
         elif(self.my_pan > critical_degree):  # 10 degree
             self.walk_service (1, self.backward_step, self.my_pan, self.my_position.translation.y)
-            print("go right")
+            rospy.loginfo("go right")
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
         elif(self.my_pan < - critical_degree):
             self.walk_service (1, self.backward_step, self.my_pan, self.my_position.translation.y)
-            print("go left")
+            rospy.loginfo("go left")
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
         else:
             self.walk_service(1, self.backward_step, self.my_pan * coeff_pan_forward,
                         self.my_position.translation.y * coeff_y_forward)
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
-            print("go forward")
+            rospy.loginfo("go forward")
 
 
 if __name__ == "__main__":
-    rospy.init_node("Sprint")
-    sprint_node = Sprint()
+    rospy.init_node("Srospy.loginfo")
+    srospy.loginfo_node = Srospy.loginfo()
     aruco_sub = rospy.Subscriber(
-        '/fiducial_transforms', FiducialTransformArray, sprint_node.update_aruco_pose)
+        '/fiducial_transforms', FiducialTransformArray, srospy.loginfo_node.update_aruco_pose)
     time_to_wait = 0.5
     while True:
-        flag_go_back = sprint_node.walking_forward_tick()
+        flag_go_back = srospy.loginfo_node.walking_forward_tick()
         time.sleep(time_to_wait)
         if (flag_go_back == 0):
             break
     while True:
-        sprint_node.walking_backward_tick()
+        srospy.loginfo_node.walking_backward_tick()
         time.sleep(time_to_wait)
