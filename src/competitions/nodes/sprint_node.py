@@ -60,16 +60,16 @@ class Sprint:
             print("Stop and go back")
             return 0
         elif(self.my_pan > critical_degree):  # 10 degree
-            self.walk_service (1, self.forward_step, self.my_pan, self.my_position.y)
+            self.walk_service (1, self.forward_step, self.my_pan, self.my_position.translation.y)
             print("go right")
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
         elif(self.my_pan < - critical_degree):
-            self.walk_service (1, self.forward_step, self.my_pan, self.my_position.y)
+            self.walk_service (1, self.forward_step, self.my_pan, self.my_position.translation.y)
             print("go left")
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
         else:
             self.walk_service(1, self.forward_step, self.my_pan * coeff_pan_forward,
-                        self.my_position.y * coeff_y_forward)
+                        self.my_position.translation.y * coeff_y_forward)
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
             print("go forward")
         return 1
@@ -86,16 +86,16 @@ class Sprint:
             print("Stop and relax")
             exit()  # fine exit
         elif(self.my_pan > critical_degree):  # 10 degree
-            self.walk_service (1, self.backward_step, self.my_pan, self.my_position.y)
+            self.walk_service (1, self.backward_step, self.my_pan, self.my_position.translation.y)
             print("go right")
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
         elif(self.my_pan < - critical_degree):
-            self.walk_service (1, self.backward_step, self.my_pan, self.my_position.y)
+            self.walk_service (1, self.backward_step, self.my_pan, self.my_position.translation.y)
             print("go left")
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
         else:
             self.walk_service(1, self.backward_step, self.my_pan * coeff_pan_forward,
-                        self.my_position.y * coeff_y_forward)
+                        self.my_position.translation.y * coeff_y_forward)
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
             print("go forward")
 
