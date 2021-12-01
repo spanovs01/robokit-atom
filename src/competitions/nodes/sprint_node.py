@@ -20,7 +20,7 @@ coeff_pan_backward = 0.1
 coeff_y_backward = 0.1
 
 
-class Srospy.loginfo:
+class Sprint:
     def __init__(self) -> None:
         self.camera_pan = 0
         self.camera_tilt = 0
@@ -31,7 +31,12 @@ class Srospy.loginfo:
         self.forward_step = 48
         self.backward_step = -36
         rospy.wait_for_service('walk_service')
-        self.walk_service = rospy.ServiceProxy('walk_service', WalkService)
+        self.walk_service_client = rospy.ServiceProxy('walk_service', WalkService)
+
+
+    def walk_service(self, enable, step_length = 0, side_length = 0, rotation = 0):
+        rospy.wait_for_service('walk_service')
+        self.walk_service_client(enable, step_length, side_length, rotation)
 
     def update_aruco_pose(self, msg):
         if (len(msg.transforms) == 0):
@@ -103,16 +108,16 @@ class Srospy.loginfo:
 
 
 if __name__ == "__main__":
-    rospy.init_node("Srospy.loginfo")
-    srospy.loginfo_node = Srospy.loginfo()
+    rospy.init_node("sprint")
+    sprint_node = Sprint()
     aruco_sub = rospy.Subscriber(
-        '/fiducial_transforms', FiducialTransformArray, srospy.loginfo_node.update_aruco_pose)
+        '/fiducial_transforms', FiducialTransformArray, sprint_node.update_aruco_pose)
     time_to_wait = 0.5
     while True:
-        flag_go_back = srospy.loginfo_node.walking_forward_tick()
+        flag_go_back = sprint_node.walking_forward_tick()
         time.sleep(time_to_wait)
         if (flag_go_back == 0):
             break
     while True:
-        srospy.loginfo_node.walking_backward_tick()
+        sprint_node.walking_backward_tick()
         time.sleep(time_to_wait)
