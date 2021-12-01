@@ -28,8 +28,10 @@ class Sprint:
         self.rotation_from_camera = None
         self.my_pan = 0
         self.my_tilt = 0
+        self.forward_step = 48
+        self.backward_step = -36
         rospy.wait_for_service('walk_service')
-        walk_service = rospy.ServiceProxy('walk_service', WalkService)
+        self.walk_service = rospy.ServiceProxy('walk_service', WalkService)
 
     def update_aruco_pose(self, msg):
         if (len(msg.transforms) == 0):
@@ -58,16 +60,16 @@ class Sprint:
             print("Stop and go back")
             return 0
         elif(self.my_pan > critical_degree):  # 10 degree
-            # self.walk_service (1, 1, self.my_pan, self.my_position.y)
+            self.walk_service (1, self.forward_step, self.my_pan, self.my_position.y)
             print("go right")
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
         elif(self.my_pan < - critical_degree):
-            # self.walk_service (1, 1, self.my_pan, self.my_position.y)
+            self.walk_service (1, self.forward_step, self.my_pan, self.my_position.y)
             print("go left")
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
         else:
-            # self.walk_service(1, 1, self.my_pan * coeff_pan_forward,
-            #             self.my_position.y * coeff_y_forward)
+            self.walk_service(1, self.forward_step, self.my_pan * coeff_pan_forward,
+                        self.my_position.y * coeff_y_forward)
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
             print("go forward")
         return 1
@@ -84,16 +86,16 @@ class Sprint:
             print("Stop and relax")
             exit()  # fine exit
         elif(self.my_pan > critical_degree):  # 10 degree
-            # walk_service (1, -1, self.my_pan, self.my_position.y)
+            self.walk_service (1, self.backward_step, self.my_pan, self.my_position.y)
             print("go right")
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
         elif(self.my_pan < - critical_degree):
-            # walk_service (1, -1, self.my_pan, self.my_position.y)
+            self.walk_service (1, self.backward_step, self.my_pan, self.my_position.y)
             print("go left")
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
         else:
-            # walk_service(1, - 1, self.my_pan * coeff_pan_forward,
-            #             self.my_position.y * coeff_y_forward)
+            self.walk_service(1, self.backward_step, self.my_pan * coeff_pan_forward,
+                        self.my_position.y * coeff_y_forward)
             rospy.loginfo(f"my pan: {self.my_pan}, {self.my_tilt}")
             print("go forward")
 
