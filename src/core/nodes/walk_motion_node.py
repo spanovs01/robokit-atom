@@ -50,6 +50,14 @@ class MotionServer:
         with open(config_path) as f:
             self.servo_config = json.load(f)
 
+        config_path = core_path + "/config/servo_config.json"
+        with open(config_path) as f:
+            self.servo_config = json.load(f)
+
+        config_path = core_path + "/config/servo_config.json"
+        with open(config_path) as f:
+            self.servo_config = json.load(f)
+
     def handle_walk(self, req):
         walk_enabled = req.walk_enabled
         self.step_length = req.step_length
