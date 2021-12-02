@@ -13,6 +13,7 @@ class ExampleFSM:
         self.last_seen_ball = 0
         self.camera_pan = 0
         self.camera_tilt = 0
+        self.ball_height = 0
 
     def update_ball(self, msg):
         self.ball = (msg.x, msg.y)
@@ -27,7 +28,7 @@ class ExampleFSM:
         try:
             get_coords = rospy.ServiceProxy('model_service', ModelService)
             print(self.ball[0], self.ball[1], self.camera_pan, self.camera_tilt)
-            response = get_coords(int(self.ball[0]), int(self.ball[1]), self.camera_pan, self.camera_tilt)
+            response = get_coords(int(self.ball[0]), int(self.ball[1]), self.camera_pan, self.camera_tilt, self.ball_height)
             return (response.x, response.y)
         except rospy.ServiceException as e:
             print("Service call failed: %s"%e)

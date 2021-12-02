@@ -13,7 +13,10 @@ from core.srv import MotionService, WalkService, ServoService
 class MotionServer:
     def __init__(self):
         self.walk_config = None
+        self.motion_config = None
+        self.servo_config = None
 
+        self.load_config()
         self.load_walk_config()
         rospy.logdebug(self.walk_config)
         self.motion = Motion(self.walk_config)
@@ -25,11 +28,6 @@ class MotionServer:
         self.step_length = 0
         self.side_length = 0
         self.angle = 0
-
-        self.motion_config = None
-        self.servo_config = None
-
-        self.load_config()
 
         rospy.logdebug(self.motion_config)
 
