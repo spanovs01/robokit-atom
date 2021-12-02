@@ -69,7 +69,7 @@ class RobotModel:
         x_self = self_vec[0] + self.neck_height * np.sin(-self.camera_tilt) * np.cos(self.camera_pan)
         y_self = self.vec[1] + self.neck_height * np.sin(-self.camera_tilt) * np.sin(self.camera_pan)
 
-        return (x_self, y_self)
+        return (-x_self, y_self)
 
         # xb, yb - coordinates of the obj in the system, which is turned by cameraPan relative to the robot system
         # x_camera = self.robot_height / np.tan(robot_alpha)

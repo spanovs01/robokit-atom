@@ -26,6 +26,7 @@ class CameraModel:
         Returns:
             turple: Normalized view vector from camera to pixel
         """
+        
         if self.do_undistortions:
              undistort_points = self.undistortPoints(pixel_x, pixel_y)
              print(undistort_points)

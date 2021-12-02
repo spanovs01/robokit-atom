@@ -10,7 +10,7 @@ from model.robot_model import RobotModel
 def self_from_image(pixel_x, pixel_y, camera_pan = 0, camera_tilt = 0, height = 0):
     robot_model = RobotModel()
     robot_model.update_camera_pan_tilt(camera_pan, camera_tilt)
-    return robot_model.image2self(pixel_x, pixel_y)
+    return robot_model.image2self(pixel_x, pixel_y, height)
 
 
 def handle_self_from_image(req):
