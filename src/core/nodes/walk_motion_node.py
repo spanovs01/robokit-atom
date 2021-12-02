@@ -52,6 +52,10 @@ class MotionServer:
         with open(config_path) as f:
             self.servo_config = json.load(f)
 
+        config_path = core_path + "/config/servo_config.json"
+        with open(config_path) as f:
+            self.servo_config = json.load(f)
+
     def handle_walk(self, req):
         walk_enabled = req.walk_enabled
         self.step_length = req.step_length
@@ -96,6 +100,7 @@ class MotionServer:
         s_str = rospy.Service(
             'motion_service', MotionService, self.handle_motion)
         s_serv = rospy.Service('servo_service', ServoService, self.handle_servo)
+
         rospy.loginfo(f"Launched \033[92mwalk_service\033[0m, \033[92mservo_service\033[0m and \033[92mmotion_service\033[0m")
         
         while True:
