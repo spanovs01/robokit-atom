@@ -211,32 +211,52 @@ if __name__ == "__main__":
     basketball = Basketball()
     ball_sub = rospy.Subscriber('ball', Point, basketball.update_ball)
     basketcase_sub = rospy.Subscriber('basketcase', Point, basketball.update_basketcase)
+
+    # Finding ball and putting it to self.ball_coordinates for future approach.
     while not (basketball.flag_ball):
         basketball.finding_ball()
     print(basketball.flag_ball)
+    
+    #Approaching to the ball on 0.8 of distance
     basketball.flag_ball = False
     basketball.turn_to_ball()
     basketball.go_to_ball(0.8)
+    
+    # Correct the ball position
     while not (basketball.flag_ball): 
         basketball.finding_ball()
     print(basketball.flag_ball)
+    
+    # Finally approach a ball
     basketball.flag_ball = False
     basketball.turn_to_ball()
     basketball.go_to_ball(1)
+    
+    # Searching for basket
     while not (basketball.flag_basketcase):
         basketball.finding_basketcase()
     print(basketball.flag_basketcase)
+    
+    # Take ball and do several steps from ball holder
     basketball.flag_basketcase = False
     basketball.thinking_take()
+    
+    # Searching for basket again
     while not (basketball.flag_basketcase):
         basketball.finding_basketcase()
     print(basketball.flag_basketcase)
+    
+    # Approach basket first time
     basketball.flag_basketcase = False
     basketball.turn_to_basketcase()
     basketball.go_to_basketcase(0.8)
+    
+    # Searching for basket again
     while not (basketball.flag_basketcase):
         basketball.finding_basketcase()
     print(basketball.flag_basketcase)
+    
+    # Finally approach basket
     basketball.flag_basketcase  = False
     basketball.go_to_basketcase(1)
     # put the ball into basketcase
